@@ -1,0 +1,15 @@
+[project]
+name = "tuna-scraper"
+version = "0.1.0"
+description = "A respectful web scraper for Carrefour tuna products"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.13.3",
+    "requests>=2.32.3",
+    "selenium>=4.29.0",
+    "urllib3>=2.0.0",
+]
+
+[project.scripts]
+tuna-scraper = "main:main"
