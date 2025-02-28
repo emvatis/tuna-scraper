@@ -34,7 +34,7 @@ try:
     from selenium import webdriver
     from selenium.webdriver.chrome.options import Options
     from selenium.webdriver.common.by import By
-    from selenium.webdriver.support import expected_conditions as EC
+    from selenium.webdriver.support import expected_conditions as ec
     from selenium.webdriver.support.ui import WebDriverWait
 
     SELENIUM_AVAILABLE = True
@@ -97,7 +97,7 @@ def scrape_with_selenium(url, scroll_pause_time=1.5, max_scrolls=20):
         driver.get(url)
 
         # Wait for the page to load
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "product-item")))
+        WebDriverWait(driver, 10).until(ec.presence_of_element_located((By.CLASS_NAME, "product-item")))
 
         # Get initial product count
         initial_products = len(driver.find_elements(By.CLASS_NAME, "product-item"))
