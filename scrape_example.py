@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Example script that uses the selectors identified by check_page.py
+Example script that uses the selectors identified by check_page.py.
+
 to scrape product information from Carrefour.
 """
 
@@ -43,15 +44,20 @@ except ImportError:
     logger.warning("Selenium is not installed. Infinite scrolling functionality will be disabled.")
 
 
-def clean_price(price_str):
+# Constants
+MAX_NO_NEW_COUNT = 2
+
+
+def clean_price(price_str: str) -> float | None:
     """
-    Cleans price string by removing currency symbols and converting to decimal format.
+    Clean price string by removing currency symbols and converting to decimal format.
 
     Args:
         price_str: Price string (e.g. "€ 3,49")
 
     Returns:
         Cleaned price as float (e.g. 3.49)
+
     """
     # Remove currency symbols and whitespace
     price_str = re.sub(r"[€$£¥]", "", price_str).strip()
@@ -65,9 +71,9 @@ def clean_price(price_str):
         return None
 
 
-def scrape_with_selenium(url, scroll_pause_time=1.5, max_scrolls=20):
+def scrape_with_selenium(url: str, scroll_pause_time: float = 1.5, max_scrolls: int = 20) -> str | None:
     """
-    Uses Selenium to scrape a page with infinite scrolling.
+    Use Selenium to scrape a page with infinite scrolling.
 
     Args:
         url: URL to scrape
@@ -76,6 +82,7 @@ def scrape_with_selenium(url, scroll_pause_time=1.5, max_scrolls=20):
 
     Returns:
         HTML content of the page after scrolling
+
     """
     if not SELENIUM_AVAILABLE:
         logger.error("Selenium is not installed. Please install it with: pip install selenium")
@@ -129,7 +136,7 @@ def scrape_with_selenium(url, scroll_pause_time=1.5, max_scrolls=20):
                         load_more_button.click()
                         time.sleep(scroll_pause_time)
                 except Exception:
-                    pass
+                    logger.exception("Error clicking Load more button")
             else:
                 no_new_count = 0
                 last_product_count = current_products
@@ -137,7 +144,7 @@ def scrape_with_selenium(url, scroll_pause_time=1.5, max_scrolls=20):
             scroll_count += 1
             if max_scrolls > 0 and scroll_count >= max_scrolls:
                 break
-            if no_new_count >= 2:
+            if no_new_count >= MAX_NO_NEW_COUNT:
                 break
 
         logger.info(f"Final product count: {last_product_count}")
@@ -149,7 +156,9 @@ def scrape_with_selenium(url, scroll_pause_time=1.5, max_scrolls=20):
         driver.quit()
 
 
-def scrape_carrefour_with_selectors(html_file=None, url=None, use_selenium=False):
+def scrape_carrefour_with_selectors(
+    html_file: str | None = None, url: str | None = None, use_selenium: bool = False
+) -> list[dict]:
     """
     Scrapes product data from Carrefour using the selectors identified by check_page.py.
 
@@ -159,10 +168,12 @@ def scrape_carrefour_with_selectors(html_file=None, url=None, use_selenium=False
         use_selenium: Whether to use Selenium for infinite scrolling
 
     Returns:
-        List of product dictionaries
+        List of product dictionaries.
+
     """
     if not html_file and not url:
-        raise ValueError("Either html_file or url must be provided")
+        msg = "Either html_file or url must be provided."
+        raise ValueError(msg)
 
     # Load HTML content
     if html_file:
@@ -252,12 +263,13 @@ def scrape_carrefour_with_selectors(html_file=None, url=None, use_selenium=False
             product_list.append(product_data)
             logger.info(f"Extracted product: {name[:50]} - {price}")
         except Exception as e:
-            logger.error(f"Error extracting data from item: {e}")
+            logger.exception(f"Error extracting data from item: {e}")
 
     return product_list
 
 
-def main():
+def main() -> int:
+    """Main function."""
     parser = argparse.ArgumentParser(description="Example Carrefour scraper using identified selectors")
     parser.add_argument(
         "--url",
@@ -297,7 +309,7 @@ def main():
             return 1
 
     except Exception as e:
-        logger.exception(f"Error: {e}")
+        logger.exception(f"Error during scraping: {e}")
         return 1
 
     return 0

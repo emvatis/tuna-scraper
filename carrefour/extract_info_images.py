@@ -1,10 +1,10 @@
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
 import json
 import logging
-from urllib.parse import urljoin
 from pathlib import Path
+from urllib.parse import urljoin
+
+import requests
+from bs4 import BeautifulSoup
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

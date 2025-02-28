@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json
-import re
 import logging
+import re
 from pathlib import Path
 
 # Configure logging
@@ -9,11 +9,14 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 
 
 def match_products():
-    """Matches product info from products_info.json with product details from products.json.
+    """
+    Match product info from products_info.json with product details from products.json.
 
-    Computes total weight, total protein and protein per euro.
+    Computet otal weight, total protein and protein per euro.
+
     Returns:
         list: A list of dictionaries containing merged product data.
+
     """
     try:
         info_path = Path("carrefour/products_info.json")
@@ -26,8 +29,8 @@ def match_products():
         logging.info(f"Loading products from {prod_path}")
         with prod_path.open("r", encoding="utf-8") as fprod:
             products = json.load(fprod)
-    except Exception as e:
-        logging.error("Error loading JSON files", exc_info=True)
+    except Exception:
+        logging.exception("Error loading JSON files")
         return []
 
     matched = []
@@ -79,8 +82,8 @@ def match_products():
     return matched
 
 
-def save_json(data, output_path):
-    """Saves data as JSON to the specified output path."""
+def save_json(data, output_path) -> None:
+    """Save data as JSON to the specified output path."""
     try:
         out_path = Path(output_path)
         if not out_path.parent.exists():
@@ -88,11 +91,11 @@ def save_json(data, output_path):
         with out_path.open("w", encoding="utf-8") as fout:
             json.dump(data, fout, ensure_ascii=False, indent=2)
         logging.info("JSON output successfully saved to %s", output_path)
-    except Exception as e:
-        logging.error("Error saving JSON file", exc_info=True)
+    except Exception:
+        logging.exception("Error saving JSON file")
 
 
-def main():
+def main() -> None:
     combined_products = match_products()
     output_file = "carrefour/matched_products.json"
     save_json(combined_products, output_file)
