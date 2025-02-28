@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 from pathlib import Path
@@ -76,9 +77,9 @@ def download_carousel_images(product_url, save_folder="images"):
     return f"Downloaded {len(image_urls)} images to {save_folder}"
 
 
-def process_products():
-    # Open and load products.json from the carrefour folder
-    products_json_path = Path("carrefour") / "products.json"
+def process_products(input_file="carrefour/products.json", output_dir="."):
+    # Open and load products.json
+    products_json_path = Path(input_file)
     with products_json_path.open("r", encoding="utf-8") as f:
         products = json.load(f)
 
@@ -90,7 +91,7 @@ def process_products():
         barcode = product_url.rstrip("/").split("/")[-1].split(".")[0]
 
         # Create a directory named after the barcode in the same directory as this script
-        product_dir = Path(__file__).resolve().parent / barcode
+        product_dir = Path(output_dir) / barcode
         product_dir.mkdir(parents=True, exist_ok=True)
 
         # Get nutritional info and save it as a JSON file in the product directory
@@ -98,15 +99,27 @@ def process_products():
         if nutrition is not None:
             nutrition_path = product_dir / "nutrition.json"
             with nutrition_path.open("w", encoding="utf-8") as nf:
+                nutrition["barcode"] = barcode
                 json.dump(nutrition, nf, ensure_ascii=False, indent=2)
         else:
             logging.warning(f"Nutritional info not found for {barcode}.")
 
         # Download carousel images into a subdirectory called "images" inside the barcode folder
-        images_folder = product_dir / "images"
+        images_folder = product_dir
         result = download_carousel_images(product_url, save_folder=str(images_folder))
         logging.info(f"Processed product {barcode}: {result}")
 
 
 if __name__ == "__main__":
-    process_products()
+    parser = argparse.ArgumentParser(description="Process product data from Carrefour")
+    parser.add_argument(
+        "--input", default="carrefour/products.json", help="Input JSON file path (default: carrefour/products.json)"
+    )
+    parser.add_argument("--output", default=".", help="Output directory path (default: current directory)")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
+    args = parser.parse_args()
+
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    process_products(input_file=args.input, output_dir=args.output)
