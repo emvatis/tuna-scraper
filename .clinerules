@@ -1,0 +1,16 @@
+Only when using python, I use uv with the following:
+
+uv (fast Python package manager)
+* Project setup: `uv init` (creates pyproject.toml, uv.lock).  `uv add <package>` to add dependencies.
+* To Run:
+    *`uv run <command>` (e.g., `uv run python script.py`)
+    * For scripts declaring dependency versions: `uv run script.py`
+* Package Management (within a project):
+    * Add package: `uv add <package>`
+    * Run a command with dependencies (doesn't change project): `uv run --with <package> <command>`
+* Updating a Package: `uv lock --upgrade-package <package>` then `uv sync` to install
+*  If you have any issues where the project environment does not exist in a directory, or has changed, try `uv sync` to fix this.
+
+
+Also for python, we use Pathlib instead of os and also logging instead of printing.
+The above is only for python projects

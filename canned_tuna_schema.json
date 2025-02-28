@@ -1,0 +1,118 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Canned Tuna Product Information",
+    "description": "Schema for representing information about a canned tuna product.",
+    "type": "object",
+    "properties": {
+        "barcode": {
+            "type": "string",
+            "description": "The product's barcode (e.g., EAN-13).  Acts as the primary identifier.",
+            "pattern": "^[0-9]{8,14}$"
+        },
+        "product_name": {
+            "type": "string",
+            "description": "The name of the canned tuna product (e.g., Yellowfin Tuna in Olive Oil)"
+        },
+        "ingredients": {
+            "type": "string",
+            "description": "A comma-separated list of ingredients."
+        },
+        "num_containers": {
+            "type": "integer",
+            "description": "Number of individual cans/containers in the package"
+        },
+        "weight_per_container_grams": {
+            "type": "number",
+            "description": "The weight of each container in grams (e.g., 80.0)"
+        },
+        "drained_weight_per_container_grams": {
+            "type": "number",
+            "description": "The drained weight of the product per container in grams (e.g., 52.0)"
+        },
+        "nutritional_information": {
+            "type": "array",
+            "description": "Array of nutritional information entries.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "per_grams": {
+                        "type": "number",
+                        "description": "The amount in grams the nutritional information is based on (e.g., 100)",
+                        "enum": [
+                            100
+                        ]
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "The state of the product (e.g., drained, full)",
+                        "enum": [
+                            "drained",
+                            "full"
+                        ]
+                    },
+                    "energy_kcal": {
+                        "type": "number",
+                        "description": "Energy in kilocalories (kcal)"
+                    },
+                    "fat_grams": {
+                        "type": "number",
+                        "description": "Fat content in grams (g)"
+                    },
+                    "saturated_fat_grams": {
+                        "type": "number",
+                        "description": "Saturated fat content in grams (g)"
+                    },
+                    "protein_grams": {
+                        "type": "number",
+                        "description": "Protein content in grams (g)"
+                    },
+                    "salt_grams": {
+                        "type": "number",
+                        "description": "Salt content in grams (g)"
+                    }
+                },
+                "required": [
+                    "per_grams",
+                    "type",
+                    "energy_kcal",
+                    "fat_grams",
+                    "saturated_fat_grams",
+                    "protein_grams",
+                    "salt_grams"
+                ]
+            }
+        },
+        "other_information": {
+            "type": "object",
+            "description": "Additional information about the product.",
+            "properties": {
+                "portions_per_container": {
+                    "type": "integer",
+                    "description": "Number of portions per container."
+                },
+                "dietary_advice": {
+                    "type": "string",
+                    "description": "Dietary advice for the product.",
+                    "nullable": true
+                }
+            },
+            "required": []
+        },
+        "manufacturer": {
+            "type": "string",
+            "description": "The name of the manufacturer."
+        },
+        "produced_in": {
+            "type": "string",
+            "description": "The country where the product was produced."
+        },
+        "customer_service_number": {
+            "type": "string",
+            "description": "The customer service number.",
+            "nullable": true
+        }
+    },
+    "required": [
+        "barcode"
+    ]
+}

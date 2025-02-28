@@ -238,10 +238,8 @@ def scrape_carrefour_with_selectors(html_file=None, url=None, use_selenium=False
 
             # Clean the unit price
             unit_price_match = re.search(r"€\s*(\d+[.,]?\d*)", price_per_kg_text)
-            if unit_price_match:
-                unit_price = clean_price(unit_price_match.group(0))
-            else:
-                unit_price = None
+
+            unit_price = clean_price(unit_price_match.group(0)) if unit_price_match else None
 
             # Create product dictionary
             product_data = {

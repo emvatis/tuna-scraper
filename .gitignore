@@ -175,3 +175,5 @@ cython_debug/
 # Images
 *.png
 *.jpg
+
+nutrition.json
