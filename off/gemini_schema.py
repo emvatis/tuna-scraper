@@ -49,7 +49,9 @@ class TunaProduct(BaseModel):
         None, description="Array of nutritional information entries."
     )
     other_information: OtherInformation | None = Field(None, description="Additional information about the product.")
-    manufacturer: str | None = Field(None, description="The name of the manufacturer.")
+    manufacturer: str | None = Field(
+        None, description="The name of the manufacturer. The largest brand you can see in the package / container."
+    )
     produced_in: str | None = Field(None, description="The country where the product was produced.")
     customer_service_number: str | None = Field(None, description="The customer service number.")
 
