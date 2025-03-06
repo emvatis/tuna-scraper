@@ -1,7 +1,7 @@
 import enum
 from pathlib import Path
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class NutritionType(str, enum.Enum):
@@ -14,36 +14,44 @@ class NutritionType(str, enum.Enum):
 class NutritionalInformation(BaseModel):
     """Model for nutritional information."""
 
-    per_grams: float
-    type: NutritionType
-    energy_kcal: float
-    fat_grams: float
-    saturated_fat_grams: float
-    protein_grams: float
-    salt_grams: float
+    per_grams: float = Field(..., description="The amount in grams the nutritional information is based on (e.g., 100)")
+    type: NutritionType = Field(..., description="The state of the product (e.g., drained, full)")
+    energy_kcal: float = Field(..., description="Energy in kilocalories (kcal)")
+    fat_grams: float = Field(..., description="Fat content in grams (g)")
+    saturated_fat_grams: float = Field(..., description="Saturated fat content in grams (g)")
+    protein_grams: float = Field(..., description="Protein content in grams (g)")
+    salt_grams: float = Field(..., description="Salt content in grams (g)")
 
 
 class OtherInformation(BaseModel):
     """Model for other product information."""
 
-    portions_per_container: int | None = None
-    dietary_advice: str | None = None
+    portions_per_container: int | None = Field(None, description="Number of portions per container.")
+    dietary_advice: str | None = Field(None, description="Dietary advice for the product.")
 
 
 class TunaProduct(BaseModel):
     """Model for canned tuna product information."""
 
-    barcode: str
-    product_name: str | None = None
-    ingredients: str | None = None
-    num_containers: int | None = None
-    weight_per_container_grams: float | None = None
-    drained_weight_per_container_grams: float | None = None
-    nutritional_information: list[NutritionalInformation] | None = None
-    other_information: OtherInformation | None = None
-    manufacturer: str | None = None
-    produced_in: str | None = None
-    customer_service_number: str | None = None
+    barcode: str = Field(
+        ..., description="The product's barcode (e.g., EAN-13). Acts as the primary identifier.", pattern="^[0-9]{8,14}$"
+    )
+    product_name: str | None = Field(
+        None, description="The name of the canned tuna product (e.g., Yellowfin Tuna in Olive Oil)"
+    )
+    ingredients: str | None = Field(None, description="A comma separated list of ingredients.")
+    num_containers: int | None = Field(None, description="Number of individual cans/containers in the package")
+    weight_per_container_grams: float | None = Field(None, description="The weight of each container in grams (e.g., 80.0)")
+    drained_weight_per_container_grams: float | None = Field(
+        None, description="The drained weight of the product per container in grams (e.g., 52.0)"
+    )
+    nutritional_information: list[NutritionalInformation] | None = Field(
+        None, description="Array of nutritional information entries."
+    )
+    other_information: OtherInformation | None = Field(None, description="Additional information about the product.")
+    manufacturer: str | None = Field(None, description="The name of the manufacturer.")
+    produced_in: str | None = Field(None, description="The country where the product was produced.")
+    customer_service_number: str | None = Field(None, description="The customer service number.")
 
 
 def get_schema_config():
