@@ -176,4 +176,11 @@ cython_debug/
 *.png
 *.jpg
 
-nutrition.json
+# Ignore all JSON files
+*.json
+
+# But do not ignore canned_tuna_schema.json in the root directory
+!canned_tuna_schema.json
+
+# Ensure JSON files inside subdirectories remain ignored
+**/*.json
